@@ -19,11 +19,18 @@ namespace ApiNetCore.Controllers
         private readonly ITiposFormaPagoRepository tiposFormaPagoRepository;
         private readonly ITipoProductoRepository tipoProductoRepository;
         private readonly ITarifasIvaRepository tarifasIvaRepository;
-        public ConfiguracionController(ITiposFormaPagoRepository tiposFormaPagoRepository, ITipoProductoRepository tipoProductoRepository, ITarifasIvaRepository tarifasIvaRepository)
+        private readonly ITiposIdentificacionRepository tiposIdentificacionRepository;
+        public ConfiguracionController(
+            ITiposFormaPagoRepository tiposFormaPagoRepository, 
+            ITipoProductoRepository tipoProductoRepository, 
+            ITarifasIvaRepository tarifasIvaRepository,
+            ITiposIdentificacionRepository tiposIdentificacionRepository
+        )
         {
             this.tiposFormaPagoRepository = tiposFormaPagoRepository;
             this.tipoProductoRepository = tipoProductoRepository;
             this.tarifasIvaRepository = tarifasIvaRepository;
+            this.tiposIdentificacionRepository = tiposIdentificacionRepository;
         }
 
         [HttpPost("tipoFormaPago")]
@@ -100,6 +107,31 @@ namespace ApiNetCore.Controllers
                 Ok: true,
                 Msg: "",
                 TarifasIva: tarifasIva.ToList()
+            ));
+        }
+
+        [HttpPost("tipoIdentificacion")]
+        public async Task<ActionResult> PostAsync(TipoIdentificacionInsertarDto tipoIdentificacionInsertarDto)
+        {
+            var tipoIdentificacion = new TipoIdentificacion
+            {
+                Activo = true,
+                Descripcion = tipoIdentificacionInsertarDto.Descripcion,
+                Codigo = tipoIdentificacionInsertarDto.Codigo
+            };
+            await tiposIdentificacionRepository.CreateAsync(tipoIdentificacion);
+            return Ok();
+        }
+
+        [HttpGet("tiposIdentificacion")]
+        public async Task<ActionResult<TiposIdentificacionConsultaDto>> GetTiposIdentificacionAsync()
+        {
+            var tiposIdentificacion = await tiposIdentificacionRepository.GetTiposIdentificacionAsync();
+            return Ok(new TiposIdentificacionConsultaDto
+            (
+                Ok: true,
+                Msg: "",
+                TiposIdentificacion: tiposIdentificacion.ToList()
             ));
         }
 

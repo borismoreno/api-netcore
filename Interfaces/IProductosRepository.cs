@@ -8,5 +8,9 @@ namespace ApiNetCore.Repositories
         Task CreateAsync(Producto producto);
 
         Task<IEnumerable<Producto>> GetProductosAsync(string IdUsuario);
+
+        Task<Producto> GetProductoPorCodigoAsync(string Codigo);
+        
+        Task<Producto> GetProductoPorDescripcionAsync(string Descripcion);
     }
 }

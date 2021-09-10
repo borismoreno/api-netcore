@@ -76,4 +76,18 @@ namespace ApiNetCore.Dtos
         string Descripcion,
         decimal ValorUnitario
     );
+
+    public record ClienteInsertarDto(
+        string RazonSocial,
+        string TipoIdentificacion,
+        string NumeroIdentificacion,
+        string Telefono,
+        string Mail,
+        string Direccion
+    );
+
+    public record TipoIdentificacionInsertarDto(
+        string Descripcion,
+        string Codigo
+    );
 }

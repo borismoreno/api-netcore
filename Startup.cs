@@ -68,9 +68,11 @@ namespace api_netcore
             services.AddSingleton<IUsuariosRepository, UsuariosRepository>();
             services.AddSingleton<IEmpresasRepository, EmpresasRepository>();
             services.AddSingleton<ITiposFormaPagoRepository, TiposFormaPagoRepository>();
+            services.AddSingleton<ITiposIdentificacionRepository, TiposIdentificacionRepository>();
             services.AddSingleton<ITipoProductoRepository, TipoProductoRepository>();
             services.AddSingleton<ITarifasIvaRepository, TarifasIvaRepository>();
             services.AddSingleton<IProductosRepository, ProductosRepository>();
+            services.AddSingleton<IClientesRepository, ClientesRepository>();
 
             services.AddControllers(options =>
             {

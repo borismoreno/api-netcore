@@ -25,6 +25,22 @@ namespace ApiNetCore.Controllers
         [HttpPost]
         public async Task<ActionResult> PostAsync(ProductoInsertarDto productoInsertarDto)
         {
+            Producto productoBuscar = null;
+            productoBuscar = await productosRepository.GetProductoPorCodigoAsync(productoInsertarDto.CodigoPrincipal);
+            string mensaje = "ese código.";
+
+            if (productoBuscar == null)
+            {
+                productoBuscar = await productosRepository.GetProductoPorDescripcionAsync(productoInsertarDto.Descripcion);
+                mensaje = "esa descripción.";
+            }
+            
+            if (productoBuscar != null)
+                return BadRequest(new ProductoInsertadoDto(
+                    Ok: false,
+                    Msg: $"Ya existe un producto con {mensaje}"
+                ));
+
             var uid = ((ClaimsIdentity)User.Identity).FindFirst("uid").Value;
             var producto = new Producto
             {
@@ -34,7 +50,7 @@ namespace ApiNetCore.Controllers
                 TipoProducto = productoInsertarDto.TipoProducto,
                 TarifaIva = productoInsertarDto.TarifaIva,
                 Descripcion = productoInsertarDto.Descripcion,
-                ValorUnitario = 56.56m,
+                ValorUnitario = productoInsertarDto.ValorUnitario,
                 Usuario = uid
             };
             await productosRepository.CreateAsync(producto);

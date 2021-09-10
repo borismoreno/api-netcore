@@ -70,12 +70,30 @@ namespace ApiNetCore.Dtos
     public record ProductoInsertadoDto(
         bool Ok,
         string Msg,
-        Producto Producto
+        Producto Producto = null
     );
 
     public record ProductosConsultaDto(
         bool Ok,
         string Msg,
         List<Producto> Productos
+    );
+
+    public record ClienteInsertadoDto(
+        bool Ok,
+        string Msg,
+        Cliente Cliente = null
+    );
+
+    public record ClientesConsultadoDto(
+        bool Ok,
+        string Msg,
+        List<Cliente> Clientes
+    );
+
+    public record TiposIdentificacionConsultaDto(
+        bool Ok,
+        string Msg,
+        List<TipoIdentificacion> TiposIdentificacion
     );
 }
