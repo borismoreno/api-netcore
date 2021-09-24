@@ -97,7 +97,7 @@ namespace ApiNetCore.Dtos
         string FechaEmision,
         List<ImpuestosDetalleDto> ImpuestosDetalle,
         List<DetallesDto> Detalles,
-        FormasPagoDto FormaDePago,
+        FormasPagoDto FormaPago,
         List<DatoAdicionalDto> DatosAdicionales,
         bool Autorizar,
         DetalleValoresDto DetalleValores

@@ -19,6 +19,8 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using System.Text;
+using Azure.Storage.Blobs;
+using ApiNetCore.Services;
 
 namespace api_netcore
 {
@@ -41,6 +43,7 @@ namespace api_netcore
             var urlmongo = Configuration.GetValue<string>("mongourl");
             var database = Configuration.GetValue<string>("database");
             var secretkey = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("secretkey"));
+            var blobconnection = Configuration.GetValue<string>("AzureBlobStorageConnectionString");
 
             services.AddAuthentication(x =>
             {
@@ -65,6 +68,8 @@ namespace api_netcore
                 return mongoClient.GetDatabase(database);
             });
 
+            services.AddSingleton(x => new BlobServiceClient(blobconnection));
+
             services.AddSingleton<IUsuariosRepository, UsuariosRepository>();
             services.AddSingleton<IEmpresasRepository, EmpresasRepository>();
             services.AddSingleton<ITiposFormaPagoRepository, TiposFormaPagoRepository>();
@@ -74,6 +79,7 @@ namespace api_netcore
             services.AddSingleton<IProductosRepository, ProductosRepository>();
             services.AddSingleton<IClientesRepository, ClientesRepository>();
             services.AddSingleton<IFacturaEmitidaRepository, FacturaEmitidaRepository>();
+            services.AddSingleton<IBlobService, BlobService>();
 
             services.AddControllers(options =>
             {

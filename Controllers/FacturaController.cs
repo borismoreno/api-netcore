@@ -3,6 +3,7 @@ using ApiNetCore.Repositories;
 using ApiNetCore.Helpers;
 using ApiNetCore.Entities;
 using ApiNetCore.Middlewares;
+using ApiNetCore.Services;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,8 @@ namespace ApiNetCore.Controllers
 
         private readonly ITarifasIvaRepository tarifasIvaRepository;
 
+        private readonly IBlobService blobService;
+
         public FacturaController(
                 IEmpresasRepository empresasRepository, 
                 IUsuariosRepository usuariosRepository, 
@@ -39,7 +42,8 @@ namespace ApiNetCore.Controllers
                 IFacturaEmitidaRepository facturaEmitidaRepository,
                 ITiposIdentificacionRepository tiposIdentificacionRepository,
                 IProductosRepository productosRepository,
-                ITarifasIvaRepository tarifasIvaRepository
+                ITarifasIvaRepository tarifasIvaRepository,
+                IBlobService blobService
             )
         {
             this.empresasRepository = empresasRepository;
@@ -49,12 +53,13 @@ namespace ApiNetCore.Controllers
             this.tiposIdentificacionRepository = tiposIdentificacionRepository;
             this.productosRepository = productosRepository;
             this.tarifasIvaRepository = tarifasIvaRepository;
+            this.blobService = blobService;
         }
 
         [HttpPost]
         public async Task<ActionResult<FacturaEmitidaInsertadaDto>> PostAsync(GuardarFacturaDto facturaDto)
         {
-            var trabajoXml = new TrabajoXml();
+            var trabajoXml = new TrabajoXml(blobService);
             var uid = ((ClaimsIdentity)User.Identity).FindFirst("uid").Value;
             var usuario = await usuariosRepository.ObtenerPorIdAsync(Guid.Parse(uid));
             var empresa = await empresasRepository.GetAsync(Guid.Parse(usuario.IdEmpresa));
@@ -95,13 +100,13 @@ namespace ApiNetCore.Controllers
                 FechaRegistro = DateTimeOffset.Now,
                 IdUsuario = uid,
                 IdCliente = cliente.Id.ToString(),
-                FormaPago = ObtenerFormaPago(facturaDto.FormaDePago),
+                FormaPago = ObtenerFormaPago(facturaDto.FormaPago),
                 ImpuestosComprobante = MapearImpuestos(facturaDto.ImpuestosDetalle),
                 DatosAdicionales = MapearDatosAdicionales(facturaDto.DatosAdicionales),
                 Detalles = await MapearDetalles(facturaDto.Detalles)
             };
             await facturaEmitidaRepository.CreateAsync(facturaEmitida);
-            var comprobante = trabajoXml.GenerarXmlComprobante(facturaEmitida, $"certificados/{empresa.PathCertificado}", empresa.ClaveFirma);
+            var comprobante = trabajoXml.GenerarXmlComprobante(facturaEmitida, empresa.PathCertificado, empresa.ClaveFirma);
             ServiciosSri serviciosSri = new();
             string urlEnvio = $"https://{(facturaEmitida.Ambiente == 2 ? "cel":"celcer")}.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
             var respuesta = serviciosSri.EnviarComprobante(comprobante, urlEnvio);

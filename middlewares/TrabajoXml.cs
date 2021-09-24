@@ -19,11 +19,19 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ApiNetCore.Services;
+using System.Threading.Tasks;
 
 namespace ApiNetCore.Middlewares
 {
     public class TrabajoXml
     {
+        private readonly IBlobService blobService;
+
+        public TrabajoXml(IBlobService blobService)
+        {
+            this.blobService = blobService;
+        }
         public byte[] GenerarXmlComprobante(FacturaEmitida facturaEmitida, string pathCertificado, string password)
         {
             object objetoComprobante = MapearFacturaModel(facturaEmitida);
@@ -192,21 +200,21 @@ namespace ApiNetCore.Middlewares
 
             try
             {
-                 X509Certificate x509Certificate = LoadCertificate(pathCertificado, password, ref privateKey, ref provider);
-                 TrustFactory.instance = TrustFactory.newInstance();
-                 TrustFactory.truster = PropsTruster.getInstance();
-                 PoliciesManager.POLICY_SIGN = new Facturae31Manager();
-                 PoliciesManager.POLICY_VALIDATION = new Facturae31Manager();
+                X509Certificate x509Certificate = LoadCertificate(pathCertificado, password, ref privateKey, ref provider);
+                TrustFactory.instance = TrustFactory.newInstance();
+                TrustFactory.truster = PropsTruster.getInstance();
+                PoliciesManager.POLICY_SIGN = new Facturae31Manager();
+                PoliciesManager.POLICY_VALIDATION = new Facturae31Manager();
 
-                 DataToSign dataToSign = new();
-                 dataToSign.setXadesFormat(EnumFormatoFirma.XAdES_BES);
-                 dataToSign.setEsquema(XAdESSchemas.XAdES_132);
-                 dataToSign.setPolicyKey("facturae31");
-                 dataToSign.setAddPolicy(false);
-                 dataToSign.setXMLEncoding("UTF-8");
-                 dataToSign.setEnveloped(true);
-                 dataToSign.addObject(new es.mityc.javasign.xml.refs.ObjectToSign(new es.mityc.javasign.xml.refs.InternObjectToSign("comprobante"), "contenido comprobante", null, "text/xml", null));
-                 dataToSign.setParentSignNode("comprobante");
+                DataToSign dataToSign = new();
+                dataToSign.setXadesFormat(EnumFormatoFirma.XAdES_BES);
+                dataToSign.setEsquema(XAdESSchemas.XAdES_132);
+                dataToSign.setPolicyKey("facturae31");
+                dataToSign.setAddPolicy(false);
+                dataToSign.setXMLEncoding("UTF-8");
+                dataToSign.setEnveloped(true);
+                dataToSign.addObject(new es.mityc.javasign.xml.refs.ObjectToSign(new es.mityc.javasign.xml.refs.InternObjectToSign("comprobante"), "contenido comprobante", null, "text/xml", null));
+                dataToSign.setParentSignNode("comprobante");
 
                 //  com.sun.org.apache.xerces.@internal.jaxp.SAXParserFactoryImpl s = new();
                 dataToSign.setDocument(LoadXml(archivoXml));
@@ -234,11 +242,11 @@ namespace ApiNetCore.Middlewares
         {
             try
             {
-                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                 documentBuilderFactory.setNamespaceAware(true);
-                 Document document = documentBuilderFactory.newDocumentBuilder().parse(new BufferedInputStream(new ByteArrayInputStream(archivoXml)));
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                documentBuilderFactory.setNamespaceAware(true);
+                Document document = documentBuilderFactory.newDocumentBuilder().parse(new BufferedInputStream(new ByteArrayInputStream(archivoXml)));
 
-                 return document;
+                return document;
             }
             catch (System.Exception)
             {
@@ -251,23 +259,46 @@ namespace ApiNetCore.Middlewares
         {
             try
             {
-                 X509Certificate certificate = null;
-                 privateKey = null;
-                 provider = null;
+                X509Certificate certificate = null;
+                privateKey = null;
+                provider = null;
 
-                 KeyStore instance = KeyStore.getInstance("PKCS12");
-                 instance.load(new BufferedInputStream(new FileInputStream(path)), password.ToCharArray());
-                 IPKStoreManager kSStore = new KSStore(instance, new PassStoreKS(password));
-                 java.util.List signCertificates = kSStore.getSignCertificates();
+                var blob = blobService.GetBlob(path,"certificados");
 
-                 if (signCertificates.size() > 0)
-                 {
-                     certificate = (X509Certificate)signCertificates.get(signCertificates.size()-1);
-                     privateKey = kSStore.getPrivateKey(certificate);
-                     provider = kSStore.getProvider(certificate);
-                     return certificate;
-                 }
-                 return certificate;
+                byte[] fileBytes = null;
+
+                if (blob.ExistsAsync().Result)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        blob.DownloadTo(ms);
+                        fileBytes = ms.ToArray();
+                    }
+                }
+
+                // using (var fileStream = System.IO.File.OpenWrite(@"C:\Users\mbcrump\Downloads\mikepic-backup.png"))
+                // {
+                //     blob.DownloadTo(fileStream);
+                // }
+
+                KeyStore instance = KeyStore.getInstance("PKCS12");
+                //java.io.File archivo = new java.io.File(blob.Uri.AbsoluteUri);
+                // var arn = new BufferedInputStream();
+                InputStream inputFileStream = new ByteArrayInputStream(fileBytes);
+
+                instance.load(new BufferedInputStream(inputFileStream), password.ToCharArray());
+                // instance.load(new BufferedInputStream(new FileInputStream(archivo)), password.ToCharArray());
+                IPKStoreManager kSStore = new KSStore(instance, new PassStoreKS(password));
+                java.util.List signCertificates = kSStore.getSignCertificates();
+
+                if (signCertificates.size() > 0)
+                {
+                    certificate = (X509Certificate)signCertificates.get(signCertificates.size()-1);
+                    privateKey = kSStore.getPrivateKey(certificate);
+                    provider = kSStore.getProvider(certificate);
+                    return certificate;
+                }
+                return certificate;
             }
             catch (System.Exception)
             {
