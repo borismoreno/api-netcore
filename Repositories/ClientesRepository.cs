@@ -25,6 +25,12 @@ namespace ApiNetCore.Repositories
             await dbCollecion.InsertOneAsync(cliente);
         }
 
+        public async Task<Cliente> GetAsync(Guid Id)
+        {
+            FilterDefinition<Cliente> filter = filterDefinitionBuilder.Eq(cliente => cliente.Id, Id);
+            return await dbCollecion.Find(filter).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Cliente>> GetClientesAsync(string IdUsuario)
         {
             FilterDefinition<Cliente> filter = filterDefinitionBuilder.Eq(x => x.Usuario, IdUsuario);

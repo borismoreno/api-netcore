@@ -29,5 +29,11 @@ namespace ApiNetCore.Repositories
             FilterDefinition<TarifaIva> filter = filterDefinitionBuilder.Eq(tarifa => tarifa.Activo, true);
             return await dbCollection.Find(filter).ToListAsync();
         }
+
+        public async Task<TarifaIva> GetTarifaIvaAsync(Guid Id)
+        {
+            FilterDefinition<TarifaIva> filter = filterDefinitionBuilder.Eq(x => x.Id, Id);
+            return await dbCollection.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }

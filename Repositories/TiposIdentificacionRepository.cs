@@ -25,6 +25,12 @@ namespace ApiNetCore.Repositories
             await dbCollection.InsertOneAsync(tipoIdentificacion);
         }
 
+        public async Task<TipoIdentificacion> GetAsync(Guid id)
+        {
+            FilterDefinition<TipoIdentificacion> filter = filterDefinitionBuilder.Eq(x => x.Id, id);
+            return await dbCollection.Find(filter).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<TipoIdentificacion>> GetTiposIdentificacionAsync()
         {
             FilterDefinition<TipoIdentificacion> filter = filterDefinitionBuilder.Eq(x => x.Activo, true);

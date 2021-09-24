@@ -10,5 +10,7 @@ namespace ApiNetCore.Entities
         public string Porcentaje { get; set; }
 
         public string Codigo { get; set; }
+
+        public decimal ValorPorcentaje { get; set; }
     }
 }

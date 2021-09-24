@@ -96,4 +96,10 @@ namespace ApiNetCore.Dtos
         string Msg,
         List<TipoIdentificacion> TiposIdentificacion
     );
+
+    public record FacturaEmitidaInsertadaDto(
+        bool Ok,
+        string Msg,
+        FacturaEmitida FacturaEmitida
+    );
 }

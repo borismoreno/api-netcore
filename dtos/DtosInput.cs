@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ApiNetCore.Entities;
@@ -89,5 +90,52 @@ namespace ApiNetCore.Dtos
     public record TipoIdentificacionInsertarDto(
         string Descripcion,
         string Codigo
+    );
+
+    public record GuardarFacturaDto(
+        string IdCliente,
+        string FechaEmision,
+        List<ImpuestosDetalleDto> ImpuestosDetalle,
+        List<DetallesDto> Detalles,
+        FormasPagoDto FormaDePago,
+        List<DatoAdicionalDto> DatosAdicionales,
+        bool Autorizar,
+        DetalleValoresDto DetalleValores
+    );
+
+    public record ImpuestosDetalleDto(
+        decimal SubtotalImpuesto,
+        decimal ValorImpuesto,
+        decimal BaseImponible,
+        string CodigoPorcentaje,
+        decimal TarifaImpuesto
+    );
+
+    public record DetallesDto(
+        string Id,
+        decimal ValorUnitario,
+        int Cantidad,
+        string TarifaIva,
+        decimal Subtotal
+    );
+
+    public record FormasPagoDto(
+        string TipoFormaPago,
+        decimal ValorPago,
+        string Plazo,
+        string TipoPlazo
+    );
+
+    public record DatoAdicionalDto(
+        string NombreAdicional,
+        string ValorAdicional
+    );
+
+    public record DetalleValoresDto(
+        decimal TotalSinImpuestos,
+        decimal TotalDescuento,
+        decimal TotalIva,
+        decimal ImporteTotal,
+        decimal Propina
     );
 }

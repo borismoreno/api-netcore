@@ -73,6 +73,7 @@ namespace api_netcore
             services.AddSingleton<ITarifasIvaRepository, TarifasIvaRepository>();
             services.AddSingleton<IProductosRepository, ProductosRepository>();
             services.AddSingleton<IClientesRepository, ClientesRepository>();
+            services.AddSingleton<IFacturaEmitidaRepository, FacturaEmitidaRepository>();
 
             services.AddControllers(options =>
             {

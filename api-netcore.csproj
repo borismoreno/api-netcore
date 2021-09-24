@@ -11,6 +11,91 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <Reference Include="bcmail-jdk15-1.43">
+      <HintPath>.\librerias\deps\bcmail-jdk15-1.43.dll</HintPath>
+    </Reference>
+    <Reference Include="bcprov-jdk15-1.43">
+      <HintPath>.\librerias\deps\bcprov-jdk15-1.43.dll</HintPath>
+    </Reference>
+    <Reference Include="bctsp-jdk15-1.43">
+      <HintPath>.\librerias\deps\bctsp-jdk15-1.43.dll</HintPath>
+    </Reference>
+    <Reference Include="commons-codec-1.2">
+      <HintPath>.\librerias\deps\commons-codec-1.2.dll</HintPath>
+    </Reference>
+    <Reference Include="commons-httpclient-3.0.1">
+      <HintPath>.\librerias\deps\commons-httpclient-3.0.1.dll</HintPath>
+    </Reference>
+    <Reference Include="commons-lang-2.4">
+      <HintPath>.\librerias\deps\commons-lang-2.4.dll</HintPath>
+    </Reference>
+    <Reference Include="commons-logging-1.1">
+      <HintPath>.\librerias\deps\commons-logging-1.1.dll</HintPath>
+    </Reference>
+    <Reference Include="facturaE_additional">
+      <HintPath>.\librerias\mit\facturaE_additional.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Core">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Security">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Text">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Util">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.API">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.XML.API.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Parse">
+      <HintPath>.\librerias\ikvm\IKVM.OpenJDK.XML.Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime">
+      <HintPath>.\librerias\ikvm\IKVM.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>.\librerias\mit\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="jss-4.2.5">
+      <HintPath>.\librerias\deps\jss-4.2.5.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibAPI-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibAPI-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibCert-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibCert-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibOCSP-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibOCSP-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibPolicy-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibPolicy-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibTrust-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibTrust-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibTSA-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibTSA-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="MITyCLibXADES-1.0.4">
+      <HintPath>.\librerias\mit\MITyCLibXADES-1.0.4.dll</HintPath>
+    </Reference>
+    <Reference Include="serializer-2.7.1">
+      <HintPath>.\librerias\deps\serializer-2.7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="xalan-2.7.1">
+      <HintPath>.\librerias\deps\xalan-2.7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="xml-apis-1.3.04">
+      <HintPath>.\librerias\deps\xml-apis-1.3.04.dll</HintPath>
+    </Reference>
+    <Reference Include="xmlsec-1.4.2-ADSI-1.0">
+      <HintPath>.\librerias\mit\xmlsec-1.4.2-ADSI-1.0.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

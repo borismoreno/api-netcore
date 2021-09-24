@@ -29,6 +29,12 @@ namespace ApiNetCore.Repositories
             await dbCollection.InsertOneAsync(producto);
         }
 
+        public async Task<Producto> GetProductoAsync(Guid Id)
+        {
+            FilterDefinition<Producto> filter = filterDefinitionBuilder.Eq(x => x.Id, Id);
+            return await dbCollection.Find(filter).FirstOrDefaultAsync();
+        }
+
         public async Task<Producto> GetProductoPorCodigoAsync(string Codigo)
         {
             FilterDefinition<Producto> filter = filterDefinitionBuilder.Regex(

@@ -10,5 +10,7 @@ namespace ApiNetCore.Repositories
         Task CreateAsync(Cliente cliente);
 
         Task<IEnumerable<Cliente>> GetClientesAsync(string IdUsuario);
+
+        Task<Cliente> GetAsync(Guid Id);
     }
 }
