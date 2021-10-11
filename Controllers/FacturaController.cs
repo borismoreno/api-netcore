@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System;
 using System.Collections.Generic;
+using WkHtmlToPdfDotNet.Contracts;
+using WkHtmlToPdfDotNet;
 
 namespace ApiNetCore.Controllers
 {
@@ -35,6 +37,8 @@ namespace ApiNetCore.Controllers
 
         private readonly IBlobService blobService;
 
+        private readonly IConverter converter;
+
         public FacturaController(
                 IEmpresasRepository empresasRepository, 
                 IUsuariosRepository usuariosRepository, 
@@ -43,7 +47,8 @@ namespace ApiNetCore.Controllers
                 ITiposIdentificacionRepository tiposIdentificacionRepository,
                 IProductosRepository productosRepository,
                 ITarifasIvaRepository tarifasIvaRepository,
-                IBlobService blobService
+                IBlobService blobService,
+                IConverter converter
             )
         {
             this.empresasRepository = empresasRepository;
@@ -54,6 +59,7 @@ namespace ApiNetCore.Controllers
             this.productosRepository = productosRepository;
             this.tarifasIvaRepository = tarifasIvaRepository;
             this.blobService = blobService;
+            this.converter = converter;
         }
 
         [HttpPost]
@@ -116,6 +122,47 @@ namespace ApiNetCore.Controllers
                 Msg: "",
                 FacturaEmitida: facturaEmitida
             ));
+        }
+
+        [HttpGet]
+        [Route("hello")]
+        [AllowAnonymous]
+        public IActionResult Hello()
+        {
+            IDocument document = CreateDocument("Hello world", "<h1>Hello world</h1>");
+            byte[] content = converter.Convert(document);
+            return File(content, "application/pdf", "hello.pdf");
+        }
+
+        private static IDocument CreateDocument(string title, string htmlContent)
+        {
+            return new HtmlToPdfDocument
+            {
+                GlobalSettings =
+                {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = PaperKind.A4,
+                    Margins = new MarginSettings { Top = 20, Bottom = 20 },
+                    DocumentTitle = title,
+                },
+                Objects =
+                {
+                    new ObjectSettings
+                    {
+                        PagesCount = true,
+                        HtmlContent = htmlContent,
+                        WebSettings = { DefaultEncoding = "utf-8" },
+                        FooterSettings =
+                        {
+                            FontSize = 9,
+                            Right = "Page [page] of [toPage]",
+                            Line = true,
+                            Spacing = 2.5,
+                        },
+                    },
+                },
+            };
         }
 
         private FormaPago ObtenerFormaPago(FormasPagoDto formasPagoDto)

@@ -21,6 +21,8 @@ using MongoDB.Driver;
 using System.Text;
 using Azure.Storage.Blobs;
 using ApiNetCore.Services;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
 
 namespace api_netcore
 {
@@ -80,6 +82,7 @@ namespace api_netcore
             services.AddSingleton<IClientesRepository, ClientesRepository>();
             services.AddSingleton<IFacturaEmitidaRepository, FacturaEmitidaRepository>();
             services.AddSingleton<IBlobService, BlobService>();
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             services.AddControllers(options =>
             {
