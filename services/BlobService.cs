@@ -1,6 +1,6 @@
+using System.IO;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
-using java.io;
 
 namespace ApiNetCore.Services
 {
@@ -17,9 +17,20 @@ namespace ApiNetCore.Services
             var containerClient = _blobClient.GetBlobContainerClient(contenedor);
 
             var blobClient = containerClient.GetBlobClient(nombre);
-            // var inp = new BufferedInputStream(info.Value.Content);
 
             return blobClient;
+        }
+
+        public async Task UploadBlob(string nombre, string contenedor, byte[] contenido)
+        {
+            var containerClient = _blobClient.GetBlobContainerClient(contenedor);
+
+            var blobClient = containerClient.GetBlobClient(nombre);
+
+            using(var stream = new MemoryStream(contenido, writable: false)) {
+                await blobClient.UploadAsync(stream);
+            }
+            
         }
     }
 }

@@ -124,46 +124,16 @@ namespace ApiNetCore.Controllers
             ));
         }
 
-        [HttpGet]
-        [Route("hello")]
-        [AllowAnonymous]
-        public IActionResult Hello()
-        {
-            IDocument document = CreateDocument("Hello world", "<h1>Hello world</h1>");
-            byte[] content = converter.Convert(document);
-            return File(content, "application/pdf", "hello.pdf");
-        }
-
-        private static IDocument CreateDocument(string title, string htmlContent)
-        {
-            return new HtmlToPdfDocument
-            {
-                GlobalSettings =
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings { Top = 20, Bottom = 20 },
-                    DocumentTitle = title,
-                },
-                Objects =
-                {
-                    new ObjectSettings
-                    {
-                        PagesCount = true,
-                        HtmlContent = htmlContent,
-                        WebSettings = { DefaultEncoding = "utf-8" },
-                        FooterSettings =
-                        {
-                            FontSize = 9,
-                            Right = "Page [page] of [toPage]",
-                            Line = true,
-                            Spacing = 2.5,
-                        },
-                    },
-                },
-            };
-        }
+        // [HttpGet]
+        // [Route("hello")]
+        // [AllowAnonymous]
+        // public async Task<IActionResult> Hello()
+        // {
+        //     TrabajoPdf objPdf = new(blobService);
+        //     IDocument document = await objPdf.CreateDocument("Hello world", "<h1>Hola Mundo</h1>");
+        //     byte[] content = converter.Convert(document);
+        //     return File(content, "application/pdf", "hello2.pdf");
+        // }
 
         private FormaPago ObtenerFormaPago(FormasPagoDto formasPagoDto)
         {

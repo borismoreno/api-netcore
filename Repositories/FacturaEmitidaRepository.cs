@@ -23,5 +23,11 @@ namespace ApiNetCore.Repositories
                 throw new ArgumentException(nameof(FacturaEmitida));
             await dbCollection.InsertOneAsync(facturaEmitida);
         }
+
+        public async Task<FacturaEmitida> GetPorClaveAcceso(string claveAcceso)
+        {
+            FilterDefinition<FacturaEmitida> filter = filterDefinitionBuilder.Eq(facturaEmitida => facturaEmitida.ClaveAcceso, claveAcceso);
+            return await dbCollection.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }
